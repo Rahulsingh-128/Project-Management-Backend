@@ -5,14 +5,15 @@ const Footer: React.FC = () => {
   return (
     <Box
       sx={{
-        bgcolor: "primary.main", // Use primary color from the theme
+        bgcolor: "primary.main", 
         color: "white",
         p: 2,
         textAlign: "center",
-        position: "fixed", // Fixes the footer at the bottom
+        position: "relative", 
         left: 0,
         right: 0,
         bottom: 0,
+        marginTop:"10px"
       }}
     >
       <Typography variant="body1">

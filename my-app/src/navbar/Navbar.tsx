@@ -1,5 +1,4 @@
-// src/components/ResponsiveAppBar.tsx
-import * as React from "react";
+import React from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -15,11 +14,20 @@ import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
 import { ThemeProvider } from "@mui/material/styles";
 import theme from "../theme";
+import { useNavigate } from "react-router-dom";
 
-const pages = ["Products", "Pricing", "Blog"];
+const pages = [
+  { name: "Home", path: "/home" },
+  { name: "Projects", path: "/cards" },
+  { name: "Add Project", path: "/add" },
+  { name: "Login", path: "/login" },
+  { name: "Registration", path: "/registration" }
+];
+
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
 function Navbar() {
+  const navigate = useNavigate();
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
     null
   );
@@ -27,25 +35,39 @@ function Navbar() {
     null
   );
 
+  // Check if the user is logged in
+  const isLoggedIn = Boolean(sessionStorage.getItem("token"));
+
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
   };
+
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElUser(event.currentTarget);
   };
 
-  const handleCloseNavMenu = () => {
+  const handleCloseNavMenu = (path?: string) => {
     setAnchorElNav(null);
+    if (path) navigate(path); // Navigate if a path is provided
   };
 
-  const handleCloseUserMenu = () => {
+  const handleCloseUserMenu = (setting?: string) => {
     setAnchorElUser(null);
+
+    if (setting === "Logout") {
+      logoutUser();
+    }
+  };
+
+  // Logout function that removes the token and redirects to login
+  const logoutUser = () => {
+    sessionStorage.removeItem("token");
+    navigate("/login"); // Redirect to login after logout
   };
 
   return (
     <ThemeProvider theme={theme}>
       <AppBar position="static" color="primary">
-        {" "}
         <Container maxWidth="xl">
           <Toolbar disableGutters>
             <AdbIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
@@ -60,11 +82,11 @@ function Navbar() {
                 fontFamily: "monospace",
                 fontWeight: 700,
                 letterSpacing: ".3rem",
-                color: "inherit", // Keep inherit to use AppBar text color
+                color: "inherit",
                 textDecoration: "none",
               }}
             >
-           Project 
+              Project
             </Typography>
 
             <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
@@ -80,14 +102,19 @@ function Navbar() {
                 id="menu-appbar"
                 anchorEl={anchorElNav}
                 open={Boolean(anchorElNav)}
-                onClose={handleCloseNavMenu}
+                onClose={() => handleCloseNavMenu()}
                 sx={{ display: { xs: "block", md: "none" } }}
               >
-                {pages.map((page)=>(
-                  <MenuItem key={page} onClick={handleCloseNavMenu}>
-                    <Typography textAlign="center">{page}</Typography>
-                  </MenuItem>
-                ))}
+                {pages
+                  .filter((page) => !(page.name === "Login" && isLoggedIn))
+                  .map((page)=> (
+                    <MenuItem
+                      key={page.name}
+                      onClick={() => handleCloseNavMenu(page.path)}
+                    >
+                      <Typography textAlign="center">{page.name}</Typography>
+                    </MenuItem>
+                  ))}
               </Menu>
             </Box>
 
@@ -107,25 +134,27 @@ function Navbar() {
                 textDecoration: "none",
               }}
             >
-              LOGO
+              Blogger
             </Typography>
 
             <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-              {pages.map((page)=>(
-                <Button
-                  key={page}
-                  onClick={handleCloseNavMenu}
-                  sx={{ my: 2, color: "white", display: "block" }} // Keep text color white on primary
-                >
-                  {page}
-                </Button>
-              ))}
+              {pages
+                .filter((page)=> !(page.name === "Login" && isLoggedIn))
+                .map((page)=> (
+                  <Button
+                    key={page.name}
+                    onClick={() => handleCloseNavMenu(page.path)}
+                    sx={{ my: 2, color: "white", display: "block" }}
+                  >
+                    {page.name}
+                  </Button>
+                ))}
             </Box>
 
             <Box sx={{ flexGrow: 0 }}>
               <Tooltip title="Open settings">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                  <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                  <Avatar alt="User Avatar" src="/static/images/avatar/2.jpg" />
                 </IconButton>
               </Tooltip>
               <Menu
@@ -133,10 +162,13 @@ function Navbar() {
                 id="menu-appbar"
                 anchorEl={anchorElUser}
                 open={Boolean(anchorElUser)}
-                onClose={handleCloseUserMenu}
+                onClose={() => handleCloseUserMenu()}
               >
                 {settings.map((setting) => (
-                  <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                  <MenuItem
+                    key={setting}
+                    onClick={() => handleCloseUserMenu(setting)}
+                  >
                     <Typography textAlign="center">{setting}</Typography>
                   </MenuItem>
                 ))}
@@ -148,5 +180,4 @@ function Navbar() {
     </ThemeProvider>
   );
 }
-
 export default Navbar;

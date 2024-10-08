@@ -2,23 +2,56 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import Navbar from './navbar/Navbar';
-import Footer from './footer/Footer';
+import { createBrowserRouter, Navigate, RouterProvider } from 'react-router-dom';
 import { ThemeProvider } from "@mui/material/styles";
 import theme from "./theme"; //
 import ProjectCard from './components/ProjectCard';
-// let childRoutes=[
-//   {
-//     path:'employees',
-//     element:<Projects />
-//   }
-// ]
+import { getAllProjects,getProjectById } from './model/ProjectCRUD';
+import AddForm from './components/AddForm';
+import Registration from './components/Registration';
+import Login from './components/Login';
+import { isAuthenticated } from "./utils/auth";
+
 const router= createBrowserRouter([
   {
     path:'/',
-    element:<App></App>,
-    // children:childRoutes
+    element:<App></App>
+  },
+  {
+    path: "/home",
+    element: isAuthenticated() ? <App /> : <Navigate to="/cards" />,
+  },
+  {
+    path:'cards',
+    element:<ProjectCard></ProjectCard>,
+    loader: async () => {
+      return await getAllProjects(); 
+    },
+  },
+  {
+    path:'add',
+    element:<AddForm></AddForm>
+  },
+  {
+    path:'registration',
+    element:<Registration></Registration>
+  },
+  {
+    path:'login',
+    element:<Login></Login>
+  },
+  {
+    path: "editproject/:_id",
+    element: <AddForm />,
+    loader: async ({ params }) => {
+      try {
+        const project = await getProjectById(Number(params._id)); 
+        console.log("edit route",project)
+        return { ...project, _id: project._id }; 
+      } catch (error) {
+        throw error; 
+      }
+    }
   }
 ]);
 
@@ -26,10 +59,7 @@ const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 root.render(
   <React.StrictMode>
     <ThemeProvider theme={theme}>
-      <Navbar></Navbar>
-      <App></App>
-      <ProjectCard></ProjectCard>
-      <Footer></Footer>
+     <RouterProvider router={router} />
     </ThemeProvider>
   </React.StrictMode>
 );
