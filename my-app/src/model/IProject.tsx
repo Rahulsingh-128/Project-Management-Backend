@@ -4,4 +4,5 @@ export interface IProject{
   Details: string;
   Demo_Link: string;
   Github_repository: string;
+  userId:number;
 }

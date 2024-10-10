@@ -75,7 +75,9 @@ export async function loginUser(username:string,password:string) {
   }
 }
 export async function register(project:object){
+  console.log("in register");
     const res=await axios.post(`${url1}/auth/register`,project);
+    console.log("res",res);
     return res;
 }
 export async function getProjectById(_id: number): Promise<IProject> {

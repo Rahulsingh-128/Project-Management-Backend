@@ -27,7 +27,8 @@ const AddForm = () => {
     Project_Name: "",
     Details: "",
     Demo_Link: "",
-    Github_repository: ""
+    Github_repository: "",
+    userId:0
   });
 
   const navigate = useNavigate();
@@ -39,6 +40,7 @@ const AddForm = () => {
         Details: projectData.Details || "",
         Demo_Link: projectData.Demo_Link || "",
         Github_repository: projectData.Github_repository || "",
+        userId:projectData.userId ||0
       });
     }
   }, [projectData]);
@@ -48,7 +50,6 @@ const AddForm = () => {
   ) => {
     const { name, value } = e.target;
 
-    // Special handling for _id field to ensure it's always a number
     if (name === "_id") {
       const numericValue = value === "" ? 0 : parseInt(value, 10);
       if (!isNaN(numericValue)) {

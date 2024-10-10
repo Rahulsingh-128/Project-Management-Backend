@@ -6,14 +6,18 @@ import Navbar from "./navbar/Navbar";
 import { ThemeProvider } from "@mui/material/styles";
 import theme from "./theme"; // Import your custom theme
 import { Outlet } from "react-router-dom";
-
+import { Provider } from 'react-redux';
+import store from "./store/store";
+import { Box } from "@mui/material";
 function App() {
   return (
     <ThemeProvider theme={theme}>
-      <div style={{ color: theme.palette.primary.main }}>Hello ABC</div>
+      <Provider store={store}>
+      <Box sx={{ color: theme.palette.primary.main }}>Hello ABC</Box>
       <Navbar></Navbar>
       <Outlet></Outlet>
       <Footer></Footer>
+      </Provider>
     </ThemeProvider>
   );
 }

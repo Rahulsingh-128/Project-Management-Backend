@@ -16,7 +16,7 @@ export const loginUser = async (username: string, password: string) => {
 
     const data = await response.json();
       if (data.token) {
-          console.log(data.token);
+      console.log(data.token);
       sessionStorage.setItem("token", data.token); // Store the token in session storage
     }
     return data;

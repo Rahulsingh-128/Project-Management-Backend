@@ -11,6 +11,8 @@ import AddForm from './components/AddForm';
 import Registration from './components/Registration';
 import Login from './components/Login';
 import { isAuthenticated } from "./utils/auth";
+import store from './store/store';
+import { Provider } from 'react-redux';
 
 const router= createBrowserRouter([
   {
@@ -58,8 +60,10 @@ const router= createBrowserRouter([
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 root.render(
   <React.StrictMode>
+    <Provider store={store}> 
     <ThemeProvider theme={theme}>
      <RouterProvider router={router} />
     </ThemeProvider>
+    </Provider>
   </React.StrictMode>
 );

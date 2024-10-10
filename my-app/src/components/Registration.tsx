@@ -12,14 +12,18 @@ import { useNavigate } from "react-router-dom";
 import theme from "../theme"; 
 import Navbar from "../navbar/Navbar";
 import Footer from "../footer/Footer";
+import { useDispatch } from 'react-redux';
+import { setUserId } from '../store/userSlice';
+import { setUserName } from "../store/userSlice";
 
-const Registration = () => {
+const Registration: React.FC = () => {
   const [formData, setFormData] = useState({
     _id:0,
     username: "",
     email: "",
     password: "",
   });
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -36,13 +40,19 @@ const Registration = () => {
   };
   async function registerForm(){
      const data=await register(formData);
-     if(data!=null){
-         window.alert(`user registered successfully.....`);
-         navigate("/login")
-     }
-     else
-         window.alert("Error during registration");
- }
+     if (data) {
+      const username =data?.data.username;
+      const userId = data?.data.userId;
+      console.log('userId from response:', userId);
+      console.log('username from response:', username);
+      dispatch(setUserId(userId)); // Dispatch the action to set the userId
+      dispatch(setUserName(username));
+      window.alert(`User registered successfully.`);
+      navigate('/login');
+    } else {
+      window.alert('Error during registration');
+    }
+  }
 
   return (
     <>

@@ -27,6 +27,8 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import {deleteProjectById} from "../model/ProjectCRUD";
 import { Link } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { RootState } from '../store/store';
 
 interface CardData {
   _id: number;
@@ -34,27 +36,16 @@ interface CardData {
   Details: string;
   Demo_Link: string;
   Github_repository: string;
+  userId: number;
+  createdAt: Date;
+  updatedAt: Date;
   }
   
 const commonImagePath = "./logo192.png";
-interface ExpandMoreProps extends IconButtonProps {
-  expand: boolean;
-}
-
-const ExpandMore = styled((props: ExpandMoreProps) => {
-  const { expand, ...other } = props;
-  return <IconButton {...other} />;
-})(({ theme }) => ({
-  marginLeft: "auto",
-  transition: theme.transitions.create("transform", {
-    duration: theme.transitions.duration.shortest,
-  }),
-  ...(props) => ({
-    transform: props.expand ? "rotate(180deg)" : "rotate(0deg)",
-  }),
-}));
 
 export default function ProjectCard() {
+  const userId = useSelector((state: RootState) => state.user.userId);
+  const username = useSelector((state: RootState) => state.user.username);
   const navigate = useNavigate();
   const data:any = useLoaderData() as CardData[]; 
   console.log("cardData",data);
@@ -75,6 +66,11 @@ export default function ProjectCard() {
 }
   return (
     <>
+    <div>
+      <h2>Project Card</h2>
+      <p>User ID: {userId}</p> {/* Display the userId */}
+      {/* Other project card logic */}
+    </div>
       <Navbar />
       <div>
       <Grid container spacing={2}>
@@ -124,6 +120,18 @@ export default function ProjectCard() {
                   <MuiLink href={card.Demo_Link} target="_blank" rel="noopener">
                     {card.Demo_Link}
                   </MuiLink>
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  <strong>Created By:</strong> {userId === card.userId ? "You" : userId}
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  <strong>Created By:</strong> { username}
+                </Typography>
+                <Typography variant="body2" color="text.secondary" sx={{ marginBottom: 1 }}>
+                  <strong>Created At:</strong> {card.createdAt}
+                </Typography>
+                <Typography variant="body2" color="text.secondary" sx={{ marginBottom: 1 }}>
+                  <strong>Updated At:</strong> {card.updatedAt}
                 </Typography>
               </CardContent>
 
