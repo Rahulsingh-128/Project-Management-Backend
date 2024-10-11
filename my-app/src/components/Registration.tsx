@@ -12,9 +12,9 @@ import { useNavigate } from "react-router-dom";
 import theme from "../theme"; 
 import Navbar from "../navbar/Navbar";
 import Footer from "../footer/Footer";
-import { useDispatch } from 'react-redux';
-import { setUserId } from '../store/userSlice';
-import { setUserName } from "../store/userSlice";
+// import { useDispatch } from 'react-redux';
+// import { setUserId } from '../store/userSlice';
+// import { setUserName } from "../store/userSlice";
 
 const Registration: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -23,7 +23,7 @@ const Registration: React.FC = () => {
     email: "",
     password: "",
   });
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -41,12 +41,12 @@ const Registration: React.FC = () => {
   async function registerForm(){
      const data=await register(formData);
      if (data) {
-      const username =data?.data.username;
-      const userId = data?.data.userId;
-      console.log('userId from response:', userId);
-      console.log('username from response:', username);
-      dispatch(setUserId(userId)); // Dispatch the action to set the userId
-      dispatch(setUserName(username));
+      // const username =data?.data.username;
+      // const userId = data?.data.userId;
+      // console.log('userId from response:', userId);
+      // console.log('username from response:', username);
+      // dispatch(setUserId(userId)); // Dispatch the action to set the userId
+      // dispatch(setUserName(username));
       window.alert(`User registered successfully.`);
       navigate('/login');
     } else {

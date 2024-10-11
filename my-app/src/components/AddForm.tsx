@@ -18,8 +18,12 @@ import {addProject,updateProject,getProjectById} from '../model/ProjectCRUD';
 import Navbar from "../navbar/Navbar";
 import Footer from "../footer/Footer";
 import { IProject } from "../model/IProject";
+import { useSelector } from 'react-redux';
+import { RootState } from '../store/store';
 
 const AddForm = () => {
+  const userId = useSelector((state: RootState) => state.user.userId);
+  const username = useSelector((state: RootState) => state.user.username);
   const projectData: IProject | null = useLoaderData() as IProject | null;
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
@@ -40,10 +44,15 @@ const AddForm = () => {
         Details: projectData.Details || "",
         Demo_Link: projectData.Demo_Link || "",
         Github_repository: projectData.Github_repository || "",
-        userId:projectData.userId ||0
+        userId:projectData.userId || userId ||0
       });
+    }else {
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        userId: userId || 0,
+      }));
     }
-  }, [projectData]);
+  }, [projectData, userId]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -73,6 +82,7 @@ const AddForm = () => {
       if (projectData && projectData._id) {
         await updateProject(formData);
       } else {
+        console.log("formdata",formData);
         await addProject(formData);
       }
       navigate("/cards");

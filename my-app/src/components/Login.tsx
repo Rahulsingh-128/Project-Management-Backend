@@ -11,8 +11,12 @@ import { useNavigate } from "react-router-dom";
 import theme from "../theme";
 import { loginUser } from "../model/authCrud"; 
 import Navbar from "../navbar/Navbar";
+import { useDispatch } from 'react-redux';
+import { setUserId, setUserName } from "../store/userSlice";
+
 
 const Login = () => {
+  const dispatch = useDispatch();
   const [formData, setFormData] = useState({ username: "", password: "" });
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const navigate = useNavigate();
@@ -29,9 +33,12 @@ const Login = () => {
     e.preventDefault();
     try {
       const response = await loginUser(formData.username, formData.password);
-      if (response.token) {
-        console.log("Login successful:", response);
-        navigate("/cards"); // Redirect to dashboard or another authenticated route
+      console.log("login",response);
+      
+      if (response.username && response.userId && response.token) {
+        dispatch(setUserName(response.username));
+        dispatch(setUserId(response.userId))
+        navigate("/cards");
       }
     } catch (error) {
       setErrorMessage("Invalid credentials. Please try again.");

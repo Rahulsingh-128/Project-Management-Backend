@@ -36,16 +36,20 @@ interface CardData {
   Details: string;
   Demo_Link: string;
   Github_repository: string;
-  userId: number;
+  created_by: CreatedBy;
   createdAt: Date;
   updatedAt: Date;
+  }
+  interface CreatedBy{
+    username:string;
+    _id:number;
   }
   
 const commonImagePath = "./logo192.png";
 
 export default function ProjectCard() {
-  const userId = useSelector((state: RootState) => state.user.userId);
-  const username = useSelector((state: RootState) => state.user.username);
+  // const userId = useSelector((state: RootState) => state.user.userId);
+  // const username = useSelector((state: RootState) => state.user.username);
   const navigate = useNavigate();
   const data:any = useLoaderData() as CardData[]; 
   console.log("cardData",data);
@@ -66,11 +70,6 @@ export default function ProjectCard() {
 }
   return (
     <>
-    <div>
-      <h2>Project Card</h2>
-      <p>User ID: {userId}</p> {/* Display the userId */}
-      {/* Other project card logic */}
-    </div>
       <Navbar />
       <div>
       <Grid container spacing={2}>
@@ -122,11 +121,11 @@ export default function ProjectCard() {
                   </MuiLink>
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
-                  <strong>Created By:</strong> {userId === card.userId ? "You" : userId}
+                  <strong>Created By:</strong> {card.created_by.username}
                 </Typography>
-                <Typography variant="body2" color="text.secondary">
+                {/* <Typography variant="body2" color="text.secondary">
                   <strong>Created By:</strong> { username}
-                </Typography>
+                </Typography> */}
                 <Typography variant="body2" color="text.secondary" sx={{ marginBottom: 1 }}>
                   <strong>Created At:</strong> {card.createdAt}
                 </Typography>

@@ -1,3 +1,4 @@
+
 const API_URL = "http://localhost:5000";
 
 export const loginUser = async (username: string, password: string) => {
@@ -15,6 +16,7 @@ export const loginUser = async (username: string, password: string) => {
     }
 
     const data = await response.json();
+    console.log("login response",data)
       if (data.token) {
       console.log(data.token);
       sessionStorage.setItem("token", data.token); // Store the token in session storage
